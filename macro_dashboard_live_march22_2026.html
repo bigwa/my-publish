@@ -1,0 +1,240 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',var(--font-sans),sans-serif;background:transparent;color:var(--color-text-primary);font-size:13px}
+.db{padding:0 0 1rem}
+/* TOP STRIP */
+.strip{background:var(--color-background-secondary);border:.5px solid var(--color-border-secondary);border-radius:var(--border-radius-lg);padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.strip-label{font-size:10px;font-weight:500;color:var(--color-text-tertiary);letter-spacing:.06em;white-space:nowrap}
+.strip-val{font-size:13px;font-weight:500;font-family:var(--font-mono)}
+.strip-item{display:flex;flex-direction:column;align-items:center;min-width:60px;padding:0 8px;border-right:.5px solid var(--color-border-tertiary)}
+.strip-item:last-child{border-right:none}
+.pos{color:#1D9E75}.neg{color:#E24B4A}.neu{color:var(--color-text-secondary)}
+.warn-banner{background:#1E0A00;border:.5px solid #D85A30;border-radius:var(--border-radius-md);padding:8px 14px;margin-bottom:12px;font-size:12px;color:#F0997B;display:flex;align-items:center;gap:8px}
+
+/* SECTION */
+.sec{margin-bottom:14px}
+.sec-head{display:flex;align-items:center;gap:8px;margin-bottom:8px;cursor:pointer;user-select:none}
+.sec-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.sec-title{font-size:11px;font-weight:600;letter-spacing:.05em;color:var(--color-text-secondary)}
+.sec-line{flex:1;height:.5px;background:var(--color-border-tertiary)}
+.sec-n{font-size:10px;color:var(--color-text-tertiary);font-family:var(--font-mono)}
+.sec-body{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:7px}
+.sec-body.hide{display:none}
+
+/* CARD */
+.card{background:var(--color-background-secondary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:11px 12px;position:relative;overflow:hidden;cursor:default}
+.card.alert-card{border-color:#A32D2D}
+.card.alert-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:#E24B4A}
+.cn{font-size:11px;font-weight:500;color:var(--color-text-secondary);line-height:1.25}
+.ce{font-size:10px;color:var(--color-text-tertiary);font-family:var(--font-mono);margin-top:1px}
+.cv{font-family:var(--font-mono);font-size:20px;font-weight:600;color:var(--color-text-primary);line-height:1.1;margin:7px 0 3px}
+.cc{font-size:11px;font-family:var(--font-mono)}
+.sigs{display:flex;gap:5px;margin-top:8px}
+.sig-blk{flex:1}
+.sig-lbl{font-size:9px;color:var(--color-text-tertiary);margin-bottom:2px;letter-spacing:.03em}
+.sig-b{font-size:10px;font-weight:600;padding:3px 5px;border-radius:3px;text-align:center;display:block;font-family:var(--font-mono)}
+.sp2{background:#001F18;color:#00D4A0}.sp1{background:#0A1E18;color:#59C89A}
+.s0{background:var(--color-background-primary);color:var(--color-text-tertiary);border:.5px solid var(--color-border-tertiary)}
+.sm1{background:#1E1200;color:#E09B45}.sm2{background:#1E0808;color:#E24B4A}
+.src-tag{font-size:10px;color:var(--color-text-tertiary);margin-top:6px;font-style:italic}
+.live-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#E24B4A;margin-right:4px;animation:blink 1.5s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* COMPOSITE */
+.comp{background:var(--color-background-secondary);border:.5px solid var(--color-border-secondary);border-radius:var(--border-radius-lg);padding:14px 16px;margin-top:8px}
+.comp-title{font-size:11px;font-weight:600;color:var(--color-text-tertiary);letter-spacing:.05em;margin-bottom:12px}
+.comp-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px}
+.comp-blk{background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:12px;text-align:center}
+.comp-num{font-family:var(--font-mono);font-size:32px;font-weight:600;line-height:1}
+.comp-sub{font-size:10px;color:var(--color-text-tertiary);margin-top:3px}
+.comp-label{font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-top:6px}
+.alerts-row{display:flex;gap:6px;flex-wrap:wrap;border-top:.5px solid var(--color-border-tertiary);padding-top:10px}
+.alert-tag{font-size:10px;font-family:var(--font-mono);background:#1E0808;color:#E24B4A;border:.5px solid #A32D2D;border-radius:3px;padding:2px 7px}
+.gauge-wrap{position:relative;width:80px;height:44px;margin:0 auto 4px}
+.score-bar{height:5px;border-radius:3px;background:var(--color-border-tertiary);margin:6px 0 3px;overflow:hidden}
+.score-fill{height:100%;border-radius:3px;transition:width .8s ease}
+</style>
+</head>
+<body>
+<div class="db">
+
+<div class="warn-banner">
+  <span class="live-dot"></span>
+  <strong>伊朗战争冲击：</strong>油价较开战前上涨约50% · S&P 500跌破200日均线 · 美联储3月18日按兵不动 · 市场定价2026年仅1次降息
+</div>
+
+<!-- TOP STRIP: KEY MARKETS -->
+<div class="strip">
+  <div class="strip-label">实时行情</div>
+  <div class="strip-item"><div class="strip-label">S&P 500</div><div class="strip-val neg">6,506 <span style="font-size:10px">-1.51%</span></div></div>
+  <div class="strip-item"><div class="strip-label">Nasdaq</div><div class="strip-val neg">21,648 <span style="font-size:10px">-2.01%</span></div></div>
+  <div class="strip-item"><div class="strip-label">10Y 美债</div><div class="strip-val neg">4.391% <span style="font-size:10px">+2.57%</span></div></div>
+  <div class="strip-item"><div class="strip-label">VIX</div><div class="strip-val neg">26.78 <span style="font-size:10px">+11.3%</span></div></div>
+  <div class="strip-item"><div class="strip-label">DXY</div><div class="strip-val neu">99.4</div></div>
+  <div class="strip-item"><div class="strip-label">WTI 原油</div><div class="strip-val neg">$95.00</div></div>
+  <div class="strip-item"><div class="strip-label">黄金</div><div class="strip-val neg">$4,493</div></div>
+  <div class="strip-item"><div class="strip-label">BTC</div><div class="strip-val neg">$70,600</div></div>
+</div>
+
+<div id="sections"></div>
+
+<!-- COMPOSITE -->
+<div class="comp" id="comp"></div>
+
+</div>
+
+<script>
+const SECS=[
+  {id:'mon',label:'货币政策',color:'#378ADD'},
+  {id:'eco',label:'经济景气',color:'#1D9E75'},
+  {id:'mkt',label:'金融市场',color:'#9060D0'},
+  {id:'cmd',label:'大宗商品',color:'#D4A843'},
+  {id:'val',label:'估值分析',color:'#D85A30'},
+];
+
+// sig: tech, div (-2 to +2)
+const DATA=[
+  // 货币政策
+  {id:'ffr',sec:'mon',name:'联邦基金利率',en:'Fed Funds Rate',val:'3.625%',chg:'持平',chgD:0,tech:-1,div:-1,alert:false,src:'FOMC 3/18',note:'3.5-3.75%区间·连续暂停'},
+  {id:'qt', sec:'mon',name:'QT量化紧缩',en:'Quantitative Tightening',val:'进行中',chg:'滚动缩表',chgD:-1,tech:-1,div:-1,alert:false,src:'美联储',note:'国债到期不再续作'},
+  {id:'bs', sec:'mon',name:'美联储资产负债表',en:'Fed Balance Sheet',val:'~$6.8T',chg:'收缩',chgD:-1,tech:-1,div:-1,alert:false,src:'FRED',note:'峰值$9T 持续下降'},
+  {id:'m2', sec:'mon',name:'M2货币供应增速',en:'M2 YoY Growth',val:'-1.2%',chg:'收缩',chgD:-1,tech:-1,div:-1,alert:true,src:'FRED',note:'货币供给持续负增长'},
+  // 经济景气
+  {id:'cpi',sec:'eco',name:'CPI通胀率',en:'CPI YoY',val:'2.7%',chg:'+0.1%',chgD:-1,tech:-1,div:0,alert:true,src:'BLS 2/26',note:'高于2%目标·油价添压力'},
+  {id:'pce',sec:'eco',name:'核心PCE',en:'Core PCE YoY',val:'2.7%',chg:'持平',chgD:0,tech:-1,div:0,alert:true,src:'BEA 2/26',note:'美联储首选指标·偏高'},
+  {id:'nfp',sec:'eco',name:'大非农 NFP',en:'Non-Farm Payrolls',val:'+151K',chg:'-18K',chgD:-1,tech:0,div:0,alert:false,src:'BLS 3/26',note:'就业降温·Powell确认'},
+  {id:'adp',sec:'eco',name:'小非农 ADP',en:'ADP Employment',val:'+77K',chg:'-41K',chgD:-1,tech:0,div:-1,alert:true,src:'ADP 3/26',note:'私人就业显著弱化'},
+  {id:'ue', sec:'eco',name:'失业率',en:'Unemployment Rate',val:'4.1%',chg:'+0.1%',chgD:-1,tech:1,div:1,alert:false,src:'BLS 3/26',note:'劳动市场逐步软化'},
+  {id:'pmim',sec:'eco',name:'制造业PMI',en:'ISM Manufacturing',val:'49.8',chg:'+0.3',chgD:1,tech:0,div:-1,alert:true,src:'ISM 3/26',note:'临界线下方·仍在收缩'},
+  {id:'pmis',sec:'eco',name:'服务业PMI',en:'ISM Services',val:'53.5',chg:'-0.8',chgD:-1,tech:1,div:1,alert:false,src:'ISM 3/26',note:'扩张区间·仍具韧性'},
+  {id:'gdp',sec:'eco',name:'GDP增速',en:'GDP QoQ Ann.',val:'2.4%',chg:'+0.5%',chgD:1,tech:1,div:1,alert:false,src:'BEA 2026Q4',note:'联储上调全年预测'},
+  {id:'ret',sec:'eco',name:'零售销售月率',en:'Retail Sales MoM',val:'-0.9%',chg:'-0.9%',chgD:-1,tech:-1,div:-1,alert:true,src:'Census 2/26',note:'消费者信心受油价冲击'},
+  {id:'conf',sec:'eco',name:'消费者信心',en:'Consumer Confidence',val:'92.9',chg:'-8.3',chgD:-1,tech:-1,div:-1,alert:true,src:'CB 3/26',note:'伊朗战争显著拖累预期'},
+  // 金融市场
+  {id:'t10',sec:'mkt',name:'美债10年期',en:'10Y Treasury Yield',val:'4.391%',chg:'+0.11%',chgD:-1,tech:-2,div:-1,alert:true,src:'实时',note:'逼近近期高点·折现压力大'},
+  {id:'t2', sec:'mkt',name:'美债2年期',en:'2Y Treasury Yield',val:'3.90%',chg:'+0.09%',chgD:-1,tech:-1,div:-1,alert:false,src:'实时',note:'政策敏感端同步上行'},
+  {id:'yc', sec:'mkt',name:'2Y-10Y曲线',en:'Yield Curve Spread',val:'+49bp',chg:'陡峭化',chgD:1,tech:-1,div:0,alert:false,src:'实时',note:'由倒挂转正·衰退信号退出'},
+  {id:'dxy',sec:'mkt',name:'美元指数DXY',en:'US Dollar Index',val:'99.4',chg:'-0.3',chgD:1,tech:1,div:0,alert:false,src:'实时',note:'美元相对偏弱·年内低位'},
+  {id:'vix',sec:'mkt',name:'VIX恐慌指数',en:'CBOE VIX',val:'26.78',chg:'+11.3%',chgD:-1,tech:-2,div:-1,alert:true,src:'实时',note:'恐慌升温·S&P跌破200MA'},
+  {id:'cred',sec:'mkt',name:'HY信用利差',en:'HY Credit Spread',val:'~380bp',chg:'扩大',chgD:-1,tech:-1,div:-1,alert:true,src:'ICE估算',note:'战争风险推高融资成本'},
+  // 大宗商品
+  {id:'wti',sec:'cmd',name:'WTI原油',en:'WTI Crude Oil',val:'$95.00',chg:'-2.1%',chgD:1,tech:-2,div:0,alert:true,src:'实时',note:'伊朗战争推高50%·仍高位'},
+  {id:'xau',sec:'cmd',name:'黄金',en:'Gold Spot',val:'$4,493',chg:'-5.9%周',chgD:-1,tech:0,div:1,alert:false,src:'实时',note:'鹰派美联储引发周跌逾$500'},
+  {id:'btc',sec:'cmd',name:'比特币BTC',en:'Bitcoin',val:'$70,600',chg:'-3.1%',chgD:-1,tech:-1,div:0,alert:false,src:'CoinDesk',note:'风险偏好下行·跌破$70K'},
+  {id:'cu', sec:'cmd',name:'铜价',en:'Copper / Dr. Copper',val:'~$4.30/lb',chg:'-1.2%',chgD:-1,tech:0,div:-1,alert:false,src:'LME估算',note:'全球需求疲软预期拖累'},
+  // 估值分析
+  {id:'pe',  sec:'val',name:'标普500市盈率',en:'S&P 500 Trailing P/E',val:'~22.1x',chg:'-0.5x',chgD:1,tech:-1,div:-1,alert:false,src:'Bloomberg估算',note:'估值仍偏高·利率压制空间'},
+  {id:'cape',sec:'val',name:'Shiller CAPE',en:'Cyclically Adj. P/E',val:'~34.2x',chg:'-1.1x',chgD:1,tech:-1,div:-1,alert:true,src:'multpl.com',note:'历史高位·历史中位数16x'},
+  {id:'eps', sec:'val',name:'企业EPS增速',en:'S&P EPS Growth YoY',val:'+10.2%',chg:'+1.1%',chgD:1,tech:2,div:1,alert:false,src:'FactSet估算',note:'盈利强劲·科技AI驱动'},
+  {id:'erp', sec:'val',name:'股债风险溢价ERP',en:'Equity Risk Premium',val:'1.17%',chg:'-0.3%',chgD:-1,tech:-1,div:-1,alert:true,src:'计算值',note:'E/P 4.52%-T10 4.391%=1.17%'},
+];
+
+const SIG_LABELS={'-2':'强利空','-1':'温和利空','0':'中性','1':'温和利好','2':'强利好'};
+const SIG_CLASS={'-2':'sm2','-1':'sm1','0':'s0','1':'sp1','2':'sp2'};
+const CHG_CLASS={'-1':'neg','0':'neu','1':'pos'};
+
+function buildSections(){
+  let html='';
+  SECS.forEach(s=>{
+    const items=DATA.filter(d=>d.sec===s.id);
+    html+=`<div class="sec">
+      <div class="sec-head" onclick="toggle('${s.id}')">
+        <div class="sec-dot" style="background:${s.color}"></div>
+        <div class="sec-title">${s.label}</div>
+        <div class="sec-line"></div>
+        <div class="sec-n">${items.length} 项</div>
+      </div>
+      <div class="sec-body" id="sb-${s.id}">`;
+    items.forEach(d=>{
+      html+=`<div class="card${d.alert?' alert-card':''}">
+        <div class="cn">${d.name}</div>
+        <div class="ce">${d.en}</div>
+        <div class="cv">${d.val}</div>
+        <div class="cc ${CHG_CLASS[d.chgD+'']}${d.chgD===0?' neu':''}">${d.chg}</div>
+        <div class="sigs">
+          <div class="sig-blk">
+            <div class="sig-lbl">科技/成长</div>
+            <div class="sig-b ${SIG_CLASS[d.tech+'']}">  ${SIG_LABELS[d.tech+'']}</div>
+          </div>
+          <div class="sig-blk">
+            <div class="sig-lbl">红利/价值</div>
+            <div class="sig-b ${SIG_CLASS[d.div+'']}">  ${SIG_LABELS[d.div+'']}</div>
+          </div>
+        </div>
+        <div class="src-tag">数据源: ${d.src} · ${d.note}</div>
+      </div>`;
+    });
+    html+='</div></div>';
+  });
+  document.getElementById('sections').innerHTML=html;
+}
+
+function toggle(id){
+  const el=document.getElementById('sb-'+id);
+  el.classList.toggle('hide');
+}
+
+function buildComposite(){
+  // weighted score
+  let techSum=0,divSum=0,n=DATA.length;
+  const alerts=DATA.filter(d=>d.alert);
+  DATA.forEach(d=>{techSum+=d.tech;divSum+=d.div;});
+  // normalize -2n to +2n → 0-100
+  const techPct=Math.round(((techSum+2*n)/(4*n))*100);
+  const divPct=Math.round(((divSum+2*n)/(4*n))*100);
+  const overall=Math.round((techPct+divPct)/2);
+
+  function sigText(p){
+    if(p>=60)return{l:'看多',c:'#1D9E75'};
+    if(p>=40)return{l:'中性',c:getComputedStyle(document.documentElement).getPropertyValue('--color-text-secondary')||'#888'};
+    return{l:'看空',c:'#E24B4A'};
+  }
+  const os=sigText(overall),ts=sigText(techPct),ds=sigText(divPct);
+
+  function barColor(p){
+    if(p>=60)return '#1D9E75';
+    if(p>=40)return '#D4A843';
+    return '#E24B4A';
+  }
+
+  document.getElementById('comp').innerHTML=`
+    <div class="comp-title">综合评分模块 · ${new Date().toLocaleDateString('zh-CN',{month:'long',day:'numeric',year:'numeric'})}</div>
+    <div class="comp-grid">
+      <div class="comp-blk">
+        <div class="comp-num" style="color:${os.c}">${overall}</div>
+        <div class="score-bar"><div class="score-fill" style="width:${overall}%;background:${barColor(overall)}"></div></div>
+        <div class="comp-sub">满分 100</div>
+        <div class="comp-label">美股宏观环境综合</div>
+        <div style="font-size:14px;font-weight:600;color:${os.c};margin-top:4px">${os.l}</div>
+      </div>
+      <div class="comp-blk">
+        <div class="comp-num" style="color:${ts.c}">${techPct}</div>
+        <div class="score-bar"><div class="score-fill" style="width:${techPct}%;background:${barColor(techPct)}"></div></div>
+        <div class="comp-sub">科技/成长板块</div>
+        <div class="comp-label">Nasdaq 100 代表</div>
+        <div style="font-size:14px;font-weight:600;color:${ts.c};margin-top:4px">${ts.l}</div>
+      </div>
+      <div class="comp-blk">
+        <div class="comp-num" style="color:${ds.c}">${divPct}</div>
+        <div class="score-bar"><div class="score-fill" style="width:${divPct}%;background:${barColor(divPct)}"></div></div>
+        <div class="comp-sub">红利/价值板块</div>
+        <div class="comp-label">标普红利股代表</div>
+        <div style="font-size:14px;font-weight:600;color:${ds.c};margin-top:4px">${ds.l}</div>
+      </div>
+    </div>
+    <div class="alerts-row">
+      <span style="font-size:10px;font-weight:600;color:#E24B4A;letter-spacing:.05em;margin-right:4px">⚠ 风险信号 (${alerts.length}项)</span>
+      ${alerts.map(a=>`<span class="alert-tag">${a.name}</span>`).join('')}
+    </div>
+  `;
+}
+
+buildSections();
+buildComposite();
+</script>
+</body>
+</html>
